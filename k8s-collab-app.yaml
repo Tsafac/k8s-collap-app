@@ -14,9 +14,8 @@ spec:
     spec:
       containers:
       - name: k8s-collap-app-container
-        image: ghcr.io/tsafac/k8s-collap-app:latest
+        image: leberi/k8s-collap-app:latest
         ports:
           - containerPort: 3000
-      imagePullSecrets:
-        - name: ghcr-secret
+        imagePullPolicy: IfNotPresent
         

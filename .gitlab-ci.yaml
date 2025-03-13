@@ -1,0 +1,50 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+variables:
+  IMAGE_NAME: "k8s-collap-app"
+  IMAGE_TAG: "latest"
+
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "contruction de l'image Docker"
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+  only:
+    - main
+
+test:
+  stage: test
+  image: node:latest
+  script:
+    - echo "Test de l'application"
+    - npm install
+    - npm test
+  only:
+    - main
+
+push:
+  stage: push
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Push de l'image Docker vers Docker Hub"
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  script:
+    - echo "Déploiement de l'application sur Kubernetes"
+    - kubectl apply -f k8s-collab.app.yaml
+  only:
+    - main
