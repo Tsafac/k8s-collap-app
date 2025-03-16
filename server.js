@@ -43,9 +43,9 @@ app.post('/products', (req, res) => {
   res.status(201).json(newProduct);
 });
 
-// Démarrage du serveur
-app.listen(port, () => {
+// Démarrage du serveur et capture de l'instance
+const server = app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
 
-module.exports = app; // Export pour les tests
+module.exports = { app, server };

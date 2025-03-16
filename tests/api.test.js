@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server');
+const { app, server } = require('../server'); // On récupère app et server
 
 describe('API Endpoints', () => {
   it('GET /status - should return status OK', async () => {
@@ -37,3 +37,9 @@ describe('API Endpoints', () => {
     expect(res.body).toHaveProperty('price', 30.0);
   });
 });
+
+// Fermer le serveur après la fin des tests pour éviter que le handle reste ouvert
+afterAll((done) => {
+  server.close(done);
+});
+
